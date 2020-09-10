@@ -550,7 +550,7 @@
         // Инициализация карты из результата геокодирования
         ymaps.geocode( city ).then(function (res) {
             
-            map = new ymaps.Map( $map, {
+            map = new ymaps.Map( $map[0], {
                 controls: ['smallMapDefaultSet'],
                 center: res.geoObjects.get(0).geometry.getCoordinates(),
                 zoom : 10
