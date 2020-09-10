@@ -530,10 +530,1713 @@
 
 
   </style>
+<script
+  src="https://code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"></script>
+
+<script src="https://api-maps.yandex.ru/2.1/?apikey=3cd078f9-00c5-40aa-9a59-2efc1cc08457&lang=ru_RU" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+        ymaps.ready(function(){
+    
+    // обработаем каждый контейнер карты
+
+        // получим город
+        city = "Ростов-на-Дону" // > Екатеринбург
+				$map = $('#map')
+				$addrs = $('.table tr td:nth-child(2)')
+
+        // Инициализация карты из результата геокодирования
+        ymaps.geocode( city ).then(function (res) {
+            
+            map = new ymaps.Map( $map, {
+                controls: ['smallMapDefaultSet'],
+                center: res.geoObjects.get(0).geometry.getCoordinates(),
+                zoom : 10
+            });
+            
+            var markCollection = new ymaps.GeoObjectCollection(null, {
+                    preset: 'islands#blueIcon'
+                }),
+                allTimeCollection = new ymaps.GeoObjectCollection(null, {
+                    preset: 'islands#redIcon'
+                }),
+            	// Устанавливает масштаб
+                setZoom = function(){
+                    // определим границы
+                    var Bounds = [],
+                        markColBounds = markCollection.getBounds(),
+                        allTimeColBounds = allTimeCollection.getBounds();
+
+                    if( markColBounds )
+                        $.each( markColBounds, function(k,v){ Bounds.push( v ); });
+
+                    if( allTimeColBounds )
+                        $.each( allTimeColBounds, function(k,v){ Bounds.push( v ); });
+
+                    map.setBounds( Bounds, { checkZoomRange: true });            
+                };
+             
+            // добавим коллекции на карту
+            map.geoObjects
+                .add( markCollection )
+                .add( allTimeCollection );     
+            
+            //var clusterer = new ymaps.Clusterer();
+            
+            // Обрабатываем каждый адрес
+            var numbers = 1;
+            $addrs.each(function(){
+                var $the = $(this);
+                	addr = $(this).text();
+                
+                // получим координаты по адресу
+                ymaps.geocode( 'Ростов-на-Дону '+addr, { results: 1 }).then(function (res) {
+                    var Coord = res.geoObjects.get(0).geometry.getCoordinates();
+                    
+                    // Создаем метку.
+                    var placemark = new ymaps.Placemark( Coord, {
+                    		balloonContent: $the.parent().html()
+                    	});
+                    
+                    // круглосуточные отдельно
+                    if( $the.parent().text().match(/Круглосуточно/i) )
+                    	allTimeCollection.add( placemark );
+                    else
+                        markCollection.add( placemark );
+                    
+                    // Ставим масштаб. один раз - если это последний элемент.
+                    if( $addrs.length == numbers++ )
+						setZoom();
+                    
+    	        });
+                
+            });
+
+        });
+            
+    
+});
+    </script>
 </head>
 
 <body>
-  <a href="mailto:boris@adimov.ru">boris@adimov.ru</a>
+  <div class="bank__addr">
+  
+ <div id="map" style="width: 600px; height: 400px"></div>
+	
+	
+  <div class="banks__filials">
+  	<table class="table table-bordered table-hover table-condensed">
+<thead><tr><th title="Field #1">number</th>
+<th title="Field #2">address</th>
+<th title="Field #3">district</th>
+<th title="Field #4">resolution</th>
+<th title="Field #5">Без названия 4</th>
+<th title="Field #6">Без названия 5</th>
+<th title="Field #7">Без названия 6</th>
+<th title="Field #8">Без названия 7</th>
+<th title="Field #9">Без названия 8</th>
+<th title="Field #10">Без названия 9</th>
+</tr></thead>
+<tbody><tr>
+<td align="right">1</td>
+<td>пер. Казахстанский, 11 А, лит. А</td>
+<td>Ворошиловский</td>
+<td>06.06.2014 № 638</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">2</td>
+<td>ул. Токарная,82/3, лит. Д</td>
+<td>Железнодорожный </td>
+<td>19.02.2009 № 87</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">3</td>
+<td>ул. Собино, 42, лит. Б</td>
+<td>Железнодорожный </td>
+<td>21.10.2011 № 752</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">4</td>
+<td>ул. Токарная,84, лит. А</td>
+<td>Железнодорожный </td>
+<td>07.08.2013 № 843</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">5</td>
+<td>ул. Амбулаторная, 107/1, лит. В</td>
+<td>Железнодорожный </td>
+<td>08.08.2013 № 849</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">6</td>
+<td>ул. Амбулаторная, 34, лит. А</td>
+<td>Железнодорожный </td>
+<td>30.04.2014 № 493</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">7</td>
+<td>ул. Амбулаторная, 36, лит. А</td>
+<td>Железнодорожный </td>
+<td> 08.04.2014 № 383</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">8</td>
+<td>ул. Амбулаторная, 38, лит. А</td>
+<td>Железнодорожный </td>
+<td> 28.04.2014 № 477</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">9</td>
+<td>ул. 7 февраля, 52, лит. А, Б</td>
+<td>Кировский</td>
+<td>05.12.2006 № 1387</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">10</td>
+<td>ул. Шаумяна, 108, лит. А, Б</td>
+<td>Кировский</td>
+<td> 01.11.2006 № 1254</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">11</td>
+<td>ул. Социалистическая, 129, лит. А, Б</td>
+<td>Кировский</td>
+<td>26.07.2007 № 708</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">12</td>
+<td>ул. Станиславского, 114, лит. А</td>
+<td>Кировский</td>
+<td> 14.05.2007 № 472</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">13</td>
+<td>ул. Серафимовича, 103, лит.А, Б, Г</td>
+<td>Кировский</td>
+<td>22.08.2008 № 835</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">14</td>
+<td>ул. Социалистическая, 102, лит. А</td>
+<td>Кировский</td>
+<td>22.08.2008 № 835</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">15</td>
+<td>пер. Крепостной, 122, лит. ББ2</td>
+<td>Кировский</td>
+<td>18.07.2008 № 703</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">16</td>
+<td>пер. Университетский, 1/59, лит. А</td>
+<td>Кировский</td>
+<td>18.07.2008 № 703</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">17</td>
+<td>ул. Социалистическая, 106, лит. А1, ББ1Б2(б)Б3(б2), ВВ1, В2</td>
+<td>Кировский</td>
+<td>22.08.2008 № 835</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">18</td>
+<td>ул. Социалистическая, 104, лит. А, ББ1</td>
+<td>Кировский</td>
+<td>б</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">19</td>
+<td>ул. Суворова, 34, лит. АА1А2</td>
+<td>Кировский</td>
+<td>22.04.2009 № 288</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">20</td>
+<td>ул. Красных Зорь, 7/8 ул. Нефтегорская, лит. АА1, Б</td>
+<td>Кировский</td>
+<td>26.02.2009 № 103</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">21</td>
+<td>пер. Грибоедовский, 11, лит. А</td>
+<td>Кировский</td>
+<td>08.06.2009 № 426</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">22</td>
+<td>ул. Суворова, 36, лит. А, Б</td>
+<td>Кировский</td>
+<td>20.04.2009 № 282</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">23</td>
+<td>ул. Социалистическая, 130, лит. А, Б, В, Г, Д</td>
+<td>Кировский</td>
+<td>29.10.2009 № 881 от 1993 № 117</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">24</td>
+<td>пер. Университетский, 63, лит. А</td>
+<td>Кировский</td>
+<td>17.11.2009 № 938</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">25</td>
+<td>ул. Восточная, 70, лит. А, Б</td>
+<td>Кировский</td>
+<td>15.12.2009 № 1048</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">26</td>
+<td>ул. Восточная, 64, лит. А, А1, Б, В</td>
+<td>Кировский</td>
+<td>16.12.2009 № 1058</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">27</td>
+<td>ул. Соколова, 6, лит. З</td>
+<td>Кировский</td>
+<td>26.01.2010 № 31</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">28</td>
+<td>ул. Восточная,66, лит. А, Б</td>
+<td>Кировский</td>
+<td>01.04.2010 № 240</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">29</td>
+<td>ул. Восточная, 68, лит. А, Б</td>
+<td>Кировский</td>
+<td>01.04.2010 № 239</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">30</td>
+<td>ул. Восточная,74, лит. А</td>
+<td>Кировский</td>
+<td>14.04.2010 № 268</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">31</td>
+<td>ул. Донская,57, лит. А, В,Г</td>
+<td>Кировский</td>
+<td>06.04.2010 № 251</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">32</td>
+<td>пер. Нахичеванский, 96/405, лит. А</td>
+<td>Кировский</td>
+<td>04.10.2010 № 749</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">33</td>
+<td>ул. Серафимовича, 95, лит. А, А1, А2, А3</td>
+<td>Кировский</td>
+<td>10.12.2010 № 949,  22.04.2011 № 249</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">34</td>
+<td>пер. Нахичеванский, 11, лит. ЕЕ1Е2</td>
+<td>Кировский</td>
+<td>14.04.2010 № 269</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">35</td>
+<td>ул. Серафимовича, 87/38, лит. АА1А2</td>
+<td>Кировский</td>
+<td>18.03.1999 № 490,  28.05.2012 № 401</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">36</td>
+<td>ул. М. Горького,191, лит. А</td>
+<td>Кировский</td>
+<td>18.03.1999 № 490</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">37</td>
+<td>пер. Крепостной, 21, лит. Б</td>
+<td>Кировский</td>
+<td>26.08.2011 № 565</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">38</td>
+<td>пр. Ворошиловский, 10 /120, лит. Ж</td>
+<td>Кировский</td>
+<td>31.10.2011 № 803</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">39</td>
+<td>пер. Крыловской, 14-16/152, лит. А</td>
+<td>Кировский</td>
+<td>31.10.2011 № 806</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">40</td>
+<td>ул. Донская,36 лит. АА1, ГГ1Г2</td>
+<td>Кировский</td>
+<td>16.12.2011 № 929</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">41</td>
+<td>ул. Баумана, 53, лит. В</td>
+<td>Кировский</td>
+<td>15.08.2012 № 673</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">42</td>
+<td>ул. Восточная,9, лит. А</td>
+<td>Кировский</td>
+<td>30.04.2013 № 476</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">43</td>
+<td>пер. Державинский,33, лит. А</td>
+<td>Кировский</td>
+<td>09.07.2014 № 746</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">44</td>
+<td>ул. Греческого города Волос, 97/104, лит. А, Б, Б1, Б2, Г</td>
+<td>Кировский</td>
+<td>05.08.2014 № 871</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">45</td>
+<td>ул. Восточная, 6, лит. А,Б, В</td>
+<td>Кировский</td>
+<td>07.08.2014 № 882</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">46</td>
+<td>ул. М. Горького, 112, лит. А</td>
+<td>Кировский</td>
+<td>11.08.2014 № 894</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">47</td>
+<td>ул. Тургеневская, 79, лит. А</td>
+<td>Кировский</td>
+<td>14.08.2014 № 904</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">48</td>
+<td>ул. Серафимовича, 89, лит. В, В1</td>
+<td>Кировский</td>
+<td>30.10.2014 № 1269</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">49</td>
+<td>ул. Города Волос, 122, лит. А</td>
+<td>Кировский</td>
+<td>01.03.2017 № 151</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">50</td>
+<td>ул. Береговая, 29 Б</td>
+<td>Ленинский</td>
+<td>09.02.1990 № 106</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">51</td>
+<td>пер. Братский, 86, лит. Д1, Д2, Ж, И, Г</td>
+<td>Ленинский</td>
+<td>18.08.2004 № 1375</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">52</td>
+<td>ул. М. Горького, 147 а</td>
+<td>Ленинский</td>
+<td>09.03.2004 № 336</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">53</td>
+<td>ул. Станиславского, 34, лит. А, Б, В, Г, Е</td>
+<td>Ленинский</td>
+<td>15.02.2002 № 273,  07.08.2014 № 886</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">54</td>
+<td>ул. Социалистическая,41, лит. А</td>
+<td>Ленинский</td>
+<td>17.12.2002 № 2620</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">55</td>
+<td>ул. Катаева,199, лит. А</td>
+<td>Ленинский</td>
+<td>18.07.2008 № 703</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">56</td>
+<td>ул. Малюгиной, 63</td>
+<td>Ленинский</td>
+<td>21.03.2007 № 266</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">57</td>
+<td>пер. Халтуринский,93</td>
+<td>Ленинский</td>
+<td>18.08.2004 № 1375</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">58</td>
+<td>ул. Ульяновская, 12/10, лит. А, Б</td>
+<td>Ленинский</td>
+<td>08.02.2008 № 117</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">59</td>
+<td>ул. Станиславского, 39, лит. А, Б</td>
+<td>Ленинский</td>
+<td>16.11.2009 № 933</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">60</td>
+<td>ул. Станиславского, 36/35, лит. А, Б, В, Г</td>
+<td>Ленинский</td>
+<td>15.02.2002 № 273</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">61</td>
+<td>ул. М. Горького, 35</td>
+<td>Ленинский</td>
+<td>18.08.2004 № 1375</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">62</td>
+<td>пер. Соборный, 8/15</td>
+<td>Ленинский</td>
+<td>04.11.2003 № 2329</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">63</td>
+<td>ул. Социалистическая, 39, лит Г</td>
+<td>Ленинский</td>
+<td>28.10.2008 № 1138</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">64</td>
+<td>ул. Социалистическая, 38/35</td>
+<td>Ленинский</td>
+<td>29.09.2009 № 779</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">65</td>
+<td>ул. Серафимовича, 54</td>
+<td>Ленинский</td>
+<td>10.08.2009 № 578</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">66</td>
+<td>ул. Согласия, 7-9/20, лит. А,Б</td>
+<td>Ленинский</td>
+<td>21.09.2009 № 744</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">67</td>
+<td>ул. Менделеева, 1</td>
+<td>Ленинский</td>
+<td>21.04.2009 № 284</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">68</td>
+<td>пер. Халтуринский, 71, лит. А, Б, В</td>
+<td>Ленинский</td>
+<td>19.11.2009 № 946</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">69</td>
+<td>ул. Ульяновская, 8, лит. А, Б</td>
+<td>Ленинский</td>
+<td>10.11.2009 № 913</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">70</td>
+<td>ул. Ульяновская, 6, лит. А, Б</td>
+<td>Ленинский</td>
+<td>16.02.2010 № 112</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">71</td>
+<td>пер. Ученический, 11, лит. А</td>
+<td>Ленинский</td>
+<td>26.07.2007 № 708</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">72</td>
+<td>пер. Доломановский, 95/139 ул. Народного Ополчения, лит. А</td>
+<td>Ленинский</td>
+<td>21.03.2007 № 266</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">73</td>
+<td>ул. Донская,17, лит. Г</td>
+<td>Ленинский</td>
+<td>18.07.2008 № 703</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">74</td>
+<td>ул. Нижнедонская, 5, лит. А, Б, В</td>
+<td>Ленинский</td>
+<td>21.03.2007 № 266</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">75</td>
+<td>ул. Нижнедонская, 7, лит. Б, В, Д, Г</td>
+<td>Ленинский</td>
+<td>21.03.2007 № 266</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">76</td>
+<td>ул. Шаумяна, 56</td>
+<td>Ленинский</td>
+<td>22.04.2009 № 289</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">77</td>
+<td>ул. Шаумяна,58, лит. Б</td>
+<td>Ленинский</td>
+<td>26.07.2007 № 708</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">78</td>
+<td>ул. Московская, 72</td>
+<td>Ленинский</td>
+<td>31.08.2009 № 591, 25.04.2011 № 254</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">79</td>
+<td>ул. Московская, 41/27 пер. Островского, лит. А,Б,В</td>
+<td>Ленинский</td>
+<td>01.12.2010 № 914</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">80</td>
+<td>ул. Темерницкая, 69/30</td>
+<td>Ленинский</td>
+<td>04.05.2007 № 472</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">81</td>
+<td>ул. Темерницкая, 66, лит. Б, БА</td>
+<td>Ленинский</td>
+<td>26.07.2007 № 708</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">82</td>
+<td>ул. Обороны, 29, лит. А,Б</td>
+<td>Ленинский</td>
+<td>07.10.2011 № 694</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">83</td>
+<td>ул. Варфоломеева, 176, лит. А, Б, ВВ1, Г</td>
+<td>Ленинский</td>
+<td>07.10.2011 № 696</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">84</td>
+<td>ул. Семашко, 78, лит. В, лит. Г</td>
+<td>Ленинский</td>
+<td>18.03.1999 № 490, 27.10.2011 № 778</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">85</td>
+<td>ул. Московская, 28, лит. А, Б</td>
+<td>Ленинский</td>
+<td>16.12.2011, № 932</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">86</td>
+<td>пер. Бригадный, 9, лит. А</td>
+<td>Ленинский</td>
+<td> 30.12.2011 № 1002</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">87</td>
+<td>пер. Семашко, 32/68 ул. Серафимовича</td>
+<td>Ленинский</td>
+<td>21.12.2011 № 939</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">88</td>
+<td>ул. Донская,9, лит. В, Г, Ж, З, М</td>
+<td>Ленинский</td>
+<td>20.01.2012 № 17</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">89</td>
+<td>ул. Тургеневская, 23, лит. АА1</td>
+<td>Ленинский</td>
+<td>01.02.2012 № 46</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">90</td>
+<td>ул. Социалистическая, 87, лит. АА1, А2,Б</td>
+<td>Ленинский</td>
+<td>05.10.2012 № 864</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">91</td>
+<td>пер. Ученический, 14, лит. Б</td>
+<td>Ленинский</td>
+<td>30.04.2013 № 469</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">92</td>
+<td>ул. Семашко, 46, лит. Б</td>
+<td>Ленинский</td>
+<td>06.12.2013 № 1346</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">93</td>
+<td>ул. Маркова, 1, лит. АА1</td>
+<td>Ленинский</td>
+<td>06.12.2013 № 1399</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">94</td>
+<td>ул. Красноармейская, 60, лит. Б</td>
+<td>Ленинский</td>
+<td>07.03.2014 № 207</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">95</td>
+<td>ул. Обороны, 42а, лит. Г</td>
+<td>Ленинский</td>
+<td>06.06.2014 № 635</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">96</td>
+<td>ул. Пушкинская, 95а, лит. В</td>
+<td>Ленинский</td>
+<td>22.10.2014 № 1234</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">97</td>
+<td>ул. Б. Садовая, 7, лит. А</td>
+<td>Ленинский</td>
+<td>22.10.2014 № 1234</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">98</td>
+<td>ул. Социалистическая, 44, лит. А</td>
+<td>Ленинский</td>
+<td>22.10.2014 № 1235</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">99</td>
+<td>ул. Шаумяна, 37, лит. Б</td>
+<td>Ленинский</td>
+<td>23.10.2014 № 1237</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">100</td>
+<td>пер. Братский, 114, литер В, ЗЗ1</td>
+<td>Ленинский</td>
+<td>30.05.2016 № 670</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">101</td>
+<td>ул. Нансена, 106</td>
+<td>Октябрьский</td>
+<td>20.10.2006 № 1211</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">102</td>
+<td>ул. Козлова, 63а, лит. М</td>
+<td>Октябрьский</td>
+<td>11.09.2007 № 928</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">103</td>
+<td>ул. Сеченова, 10</td>
+<td>Октябрьский</td>
+<td>29.09.2009 № 776</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">104</td>
+<td>ул. Мечникова, 55, лит. А</td>
+<td>Октябрьский</td>
+<td>07.07.2010 № 486</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">105</td>
+<td>ул. Мечникова, 53, лит. А от</td>
+<td>Октябрьский</td>
+<td>26.05.2014 № 576</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">106</td>
+<td>ул. Лермонтовская, 83, лит. Г.</td>
+<td>Октябрьский</td>
+<td>19.06.2014 № 679</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">107</td>
+<td>ул. Фрунзе, 20/30 лит. А</td>
+<td>Октябрьский</td>
+<td>31.08.2015 № 774</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">108</td>
+<td>ул. Ларина, 6/1, лит. А</td>
+<td>Октябрьский</td>
+<td>14.08.2015 № 720</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">109</td>
+<td>ул. Мечникова, 57, лит. АА1</td>
+<td>Октябрьский</td>
+<td>11.12.2015 № 1225</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">110</td>
+<td>ул. Ларина, 14, лит.А</td>
+<td>Октябрьский</td>
+<td>12.09.2016 № 1282</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">111</td>
+<td>ул. Брестская, 44, лит. Д</td>
+<td>Первомайский</td>
+<td>01.09.2009 № 649</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">112</td>
+<td>ул. 20-я Линия, 23 лит. А</td>
+<td>Пролетарский</td>
+<td>18.03.1999 № 490</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">113</td>
+<td>ул. Аксайская, 9</td>
+<td>Пролетарский</td>
+<td>21.12.2009 № 1088</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">114</td>
+<td>ул.18-я линия, 22, лит. А, Б</td>
+<td>Пролетарский</td>
+<td>03.03.2008 №189</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">115</td>
+<td>пер. Грибоедовский, 70/43, лит. Б</td>
+<td>Пролетарский</td>
+<td>21.03.2007 № 266</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">116</td>
+<td>ул. 20-я линия, 9, лит. Б</td>
+<td>Пролетарский</td>
+<td>28.10.2008 № 1138</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">117</td>
+<td>ул. 3-я линия, 50, ЛИТ. А</td>
+<td>Пролетарский</td>
+<td>14.03.2008 № 229</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">118</td>
+<td>ул. Нижненольная,22, лит. А</td>
+<td>Пролетарский</td>
+<td>18.03.1999 № 490,  30.04.2013 № 472</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">119</td>
+<td>ул. Рябышева, 111, лит. В</td>
+<td>Пролетарский</td>
+<td>20.04.2009 № 281</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">120</td>
+<td>ул. Рябышева, 113, лит. Д</td>
+<td>Пролетарский</td>
+<td>22.04.2009 № 286</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">121</td>
+<td>ул. 1-я Майская, 28/15, лит. В</td>
+<td>Пролетарский</td>
+<td>16.09.2009 №731</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">122</td>
+<td>ул. 15-я Линия, 19, лит. В</td>
+<td>Пролетарский</td>
+<td>11.10.2011 № 709</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">123</td>
+<td>ул. 20-я Линия, 11/22, лит. А,Б</td>
+<td>Пролетарский</td>
+<td>27.10.2011 № 773</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">124</td>
+<td>ул. 22-я Линия, 6, лит. Б</td>
+<td>Пролетарский</td>
+<td>30.04.2013 № 473</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">125</td>
+<td>ул. Мурлычева, 4, лит. А</td>
+<td>Пролетарский</td>
+<td>20.12.2013 № 1439</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">126</td>
+<td>ул. 29-я Линия, 48, лит. Д</td>
+<td>Пролетарский</td>
+<td>06.03.2014 № 204</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">127</td>
+<td>ул. 6-я линия, 64/79, лит. А, А1, А2, А3</td>
+<td>Пролетарский</td>
+<td>14.11.2014 № 1314</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">128</td>
+<td>ул. Рябышева, 105 лит. Б</td>
+<td>Пролетарский</td>
+<td>25.12.2014 № 1426</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">129</td>
+<td>ул. Города Волос, 122, лит. А</td>
+<td>Кировский</td>
+<td>01.03.2017 № 151</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">130</td>
+<td>ул. Тургеневская, 81, литр Б</td>
+<td>Кировский</td>
+<td>16.08.20217 № 755</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">131</td>
+<td>пр. Соколова, 22/114-116, литер А, Б, В</td>
+<td>Кировский</td>
+<td>06.04.2017 № 286</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">132</td>
+<td>ул. Баумана, 65, литер А</td>
+<td>Кировский</td>
+<td>21.06.2017 № 537</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td align="right">133</td>
+<td>ул. Нансена, 110, литер В </td>
+<td>Октябрьский</td>
+<td>21.06.2017 № 536</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+</tbody></table></div>
 </body>
 
 </html>
